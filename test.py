@@ -41,9 +41,9 @@ if __name__ == '__main__':
     lr = hr.resize((hr.width // args.scale, hr.height // args.scale), resample=pil_image.BICUBIC)
     if args.compress:
         lr = compress_img(lr, args.quality)
-    lr.save(args.image_file.replace('.', '_source.'), format='jpeg')
+    lr.save(args.image_file.replace('.', '_source_{}.').format(args.quality), format='jpeg')
     bicubic = lr.resize((lr.width * args.scale, lr.height * args.scale), resample=pil_image.BICUBIC)
-    bicubic.save(args.image_file.replace('.', '_bicubic_x{}.'.format(args.scale)))
+    bicubic.save(args.image_file.replace('.', '_bicubic_x{}_{}.'.format(args.scale, args.quality)))
 
     lr, _ = preprocess(lr, device)
     hr, _ = preprocess(hr, device)
@@ -60,4 +60,4 @@ if __name__ == '__main__':
     output = np.array([preds, ycbcr[..., 1], ycbcr[..., 2]]).transpose([1, 2, 0])
     output = np.clip(convert_ycbcr_to_rgb(output), 0.0, 255.0).astype(np.uint8)
     output = pil_image.fromarray(output)
-    output.save(args.image_file.replace('.', '_ACNet{}.'.format(args.scale)))
+    output.save(args.image_file.replace('.', '_ACNet_x{}_{}.'.format(args.scale, args.quality)))
