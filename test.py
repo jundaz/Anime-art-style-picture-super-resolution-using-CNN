@@ -5,7 +5,7 @@ import torch.backends.cudnn as cudnn
 import numpy as np
 import PIL.Image as pil_image
 
-from models import FSRCNN
+from models import ACNet
 from utils import convert_ycbcr_to_rgb, preprocess, calc_psnr, compress_img
 
 
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     cudnn.benchmark = True
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-    model = FSRCNN(scale_factor=args.scale).to(device)
+    model = ACNet(scale_factor=args.scale).to(device)
 
     state_dict = model.state_dict()
     for n, p in torch.load(args.weights_file, map_location=lambda storage, loc: storage).items():
@@ -60,4 +60,4 @@ if __name__ == '__main__':
     output = np.array([preds, ycbcr[..., 1], ycbcr[..., 2]]).transpose([1, 2, 0])
     output = np.clip(convert_ycbcr_to_rgb(output), 0.0, 255.0).astype(np.uint8)
     output = pil_image.fromarray(output)
-    output.save(args.image_file.replace('.', '_fsrcnn_x{}.'.format(args.scale)))
+    output.save(args.image_file.replace('.', 'ACNet{}.'.format(args.scale)))

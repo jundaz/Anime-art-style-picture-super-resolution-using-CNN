@@ -2,9 +2,9 @@ import math
 from torch import nn
 
 
-class FSRCNN(nn.Module):
+class ACNet(nn.Module):
     def __init__(self, scale_factor, num_channels=1, d=8, s=8, m=6):
-        super(FSRCNN, self).__init__()
+        super(ACNet, self).__init__()
         self.first_part = nn.Sequential(
             nn.Conv2d(num_channels, d, kernel_size=3, padding=3//2),
             nn.PReLU(d)

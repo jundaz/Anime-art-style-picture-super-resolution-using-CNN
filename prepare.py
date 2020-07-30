@@ -8,7 +8,7 @@ from utils import calc_patch_size, convert_rgb_to_y, compress_img
 
 @calc_patch_size
 def train(args):
-    h5_file = h5py.File(args.output_path, 'w')
+    h5_file = h5py.File(args.output_path+"_quality_{}".format(args.quality), 'w')
 
     lr_patches = []
     hr_patches = []
@@ -45,7 +45,7 @@ def train(args):
 
 
 def eval(args):
-    h5_file = h5py.File(args.output_path, 'w')
+    h5_file = h5py.File(args.output_path+"_quality_{}".format(args.quality), 'w')
 
     lr_group = h5_file.create_group('lr')
     hr_group = h5_file.create_group('hr')
