@@ -3,7 +3,7 @@ from torch import nn
 
 
 class ACNet(nn.Module):
-    def __init__(self, scale_factor, num_channels=1, d=8, s=8, m=6):
+    def __init__(self, scale_factor, num_channels=1, d=6, s=6, m=6):
         super(ACNet, self).__init__()
         self.first_part = nn.Sequential(
             nn.Conv2d(num_channels, d, kernel_size=3, padding=3//2),

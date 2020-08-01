@@ -4,7 +4,7 @@ import torch
 import torch.backends.cudnn as cudnn
 import numpy as np
 import PIL.Image as pil_image
-
+from datetime import datetime
 from models import ACNet
 from utils import convert_ycbcr_to_rgb, preprocess, calc_psnr, compress_img
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     lr = hr.resize((hr.width // args.scale, hr.height // args.scale), resample=pil_image.BICUBIC)
     if args.compress:
         lr = compress_img(lr, args.quality)
-    lr.save(args.image_file.replace('.', '_source_{}.').format(args.quality), format='jpeg')
+    lr.save(args.image_file.replace('.', '_source_{}.').format(args.quality), format='jpeg', quality=100, subsampling=0)
     bicubic = lr.resize((lr.width * args.scale, lr.height * args.scale), resample=pil_image.BICUBIC)
     bicubic.save(args.image_file.replace('.', '_bicubic_x{}_{}.'.format(args.scale, args.quality)))
 
@@ -50,8 +50,11 @@ if __name__ == '__main__':
     _, ycbcr = preprocess(bicubic, device)
 
     with torch.no_grad():
+        start = datetime.now()
         preds = model(lr).clamp(0.0, 1.0)
-
+        end = datetime.now()
+        time_taken = end - start
+        print('Time: ', time_taken)
     psnr = calc_psnr(hr, preds)
     print('PSNR: {:.2f}'.format(psnr))
 
