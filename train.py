@@ -43,9 +43,8 @@ if __name__ == '__main__':
     model = ACNet(scale_factor=args.scale).to(device)
     criterion = nn.MSELoss()
     optimizer = optim.Adam([
-        {'params': model.first_part.parameters()},
-        {'params': model.mid_part.parameters()},
-        {'params': model.last_part.parameters(), 'lr': args.lr * 0.1}
+        {'params': model.convnet.parameters()},
+        {'params': model.output.parameters(), 'lr': args.lr * 0.1}
     ], lr=args.lr)
 
     train_dataset = TrainDataset(args.train_file)
