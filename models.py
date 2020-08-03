@@ -17,11 +17,15 @@ class ACNet(nn.Module):
         self.prelu5 = nn.PReLU(4)
         self.conv6 = nn.Conv2d(in_channels=4, out_channels=4, kernel_size=3, padding=1)
         self.prelu6 = nn.PReLU(4)
-        self.conv7 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=1)
-        self.prelu7 = nn.PReLU(8)
+        self.conv7 = nn.Conv2d(in_channels=4, out_channels=4, kernel_size=3, padding=1)
+        self.prelu7 = nn.PReLU(4)
+        self.conv8 = nn.Conv2d(in_channels=4, out_channels=4, kernel_size=3, padding=1)
+        self.prelu8 = nn.PReLU(4)
+        self.conv9 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=1)
+        self.prelu9 = nn.PReLU(8)
         self.convnet = nn.Sequential(self.conv1, self.prelu1, self.conv2, self.prelu2, self.conv3, self.prelu3,
                                      self.conv4, self.prelu4, self.conv5, self.prelu5, self.conv6, self.prelu6,
-                                     self.conv7, self.prelu7)
+                                     self.conv7, self.prelu7, self.conv8, self.prelu8, self.conv9, self.prelu9,)
         self.output = nn.ConvTranspose2d(8, 1, kernel_size=3, stride=scale_factor, padding=1,
                                          output_padding=scale_factor - 1)
         for i in self.convnet:
