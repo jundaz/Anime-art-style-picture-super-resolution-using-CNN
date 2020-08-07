@@ -77,3 +77,4 @@ python test.py      --weights-file
                     is used for indicating the size of the side length of the square sumnail)
 ```
 I also provided weight for 4 different quality compression(50, 75, 95, lossless) with scaling factor of 2 in weight folder
+Please see sample folder for sample of result used in the paper.
