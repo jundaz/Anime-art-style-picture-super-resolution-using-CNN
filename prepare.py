@@ -76,9 +76,9 @@ if __name__ == '__main__':
     parser.add_argument('--images-dir', type=str, required=True)
     parser.add_argument('--output-path', type=str, required=True)
     parser.add_argument('--scale', type=int, default=2)
-    parser.add_argument('--quality', type=int, default=60)
     parser.add_argument('--eval', action='store_true')
     parser.add_argument('--compress', action='store_true')
+    parser.add_argument('--quality', type=int, default=60)
     args = parser.parse_args()
 
     if not args.eval:
