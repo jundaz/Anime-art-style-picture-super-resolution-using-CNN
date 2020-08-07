@@ -14,8 +14,12 @@ if __name__ == '__main__':
     parser.add_argument('--weights-file', type=str, required=True)
     parser.add_argument('--image-file', type=str, required=True)
     parser.add_argument('--scale', type=int, default=2)
-    parser.add_argument('--quality', type=int, default=60)
     parser.add_argument('--compress', action='store_true')
+    parser.add_argument('--quality', type=int, default=60)
+    parser.add_argument('--crop', action='store_true')
+    parser.add_argument('--top', type=int, default=760)
+    parser.add_argument('--left', type=int, default=160)
+    parser.add_argument('--side_len', type=int, default=100)
     args = parser.parse_args()
 
     cudnn.benchmark = True
@@ -38,22 +42,25 @@ if __name__ == '__main__':
     image_height = (image.height // args.scale) * args.scale
 
     hr = image.resize((image_width, image_height), resample=pil_image.BICUBIC)
-    hr.crop((760, 160, 1060, 460)). \
-        save(args.image_file.replace('.', '_origin_thumbnail_{}.'.format(args.scale, args.quality)))
+    if args.crop:
+        hr.crop((args.left, args.top, args.left+args.side_len, args.top+args.side_len)). \
+            save(args.image_file.replace('.', '_origin_thumbnail_{}.'.format(args.scale, args.quality)))
     lr = hr.resize((hr.width // args.scale, hr.height // args.scale), resample=pil_image.BICUBIC)
     if args.compress:
         lr = compress_img(lr, args.quality)
     lr.save(args.image_file.replace('.png', '_source_{}.jpg').format(args.quality), format='jpeg', quality=100, subsampling=0)
-    lr.crop((380, 80, 530, 230)).\
-        save(args.image_file.replace('.png', '_source_thumbnail_{}.jpg').format(args.quality), format='jpeg', quality=100, subsampling=0)
+    if args.crop:
+        lr.crop((args.left//args.scale, args.top//args.scale, args.left+args.side_len//args.scale, args.top+args.side_len//args.scale)).\
+            save(args.image_file.replace('.png', '_source_thumbnail_{}.jpg').format(args.quality), format='jpeg', quality=100, subsampling=0)
     start = datetime.now()
     bicubic = lr.resize((lr.width * args.scale, lr.height * args.scale), resample=pil_image.BICUBIC)
     end = datetime.now()
     time_taken = end - start
     print('Bicubic_Time: ', time_taken)
     bicubic.save(args.image_file.replace('.', '_bicubic_x{}_{}.'.format(args.scale, args.quality)))
-    bicubic.crop((760, 160, 1060, 460)).\
-        save(args.image_file.replace('.', '_bicubic_x{}_thumbnail_{}.'.format(args.scale, args.quality)))
+    if args.crop:
+        bicubic.crop((args.left, args.top, args.left+args.side_len, args.top+args.side_len)).\
+            save(args.image_file.replace('.', '_bicubic_x{}_thumbnail_{}.'.format(args.scale, args.quality)))
 
     lr, _ = preprocess(lr, device)
     hr, _ = preprocess(hr, device)
@@ -76,5 +83,6 @@ if __name__ == '__main__':
     output = np.clip(convert_ycbcr_to_rgb(output), 0.0, 255.0).astype(np.uint8)
     output = pil_image.fromarray(output)
     output.save(args.image_file.replace('.', '_ACNet_x{}_{}.'.format(args.scale, args.quality)))
-    output.crop((760, 160, 1060, 460)).\
-        save(args.image_file.replace('.', '_ACNet_x{}_thumbnail_{}.'.format(args.scale, args.quality)))
+    if args.crop:
+        output.crop((args.left, args.top, args.left+args.side_len, args.top+args.side_len)).\
+            save(args.image_file.replace('.', '_ACNet_x{}_thumbnail_{}.'.format(args.scale, args.quality)))
