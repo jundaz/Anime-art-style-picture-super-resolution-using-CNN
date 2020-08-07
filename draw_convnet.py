@@ -156,8 +156,8 @@ if __name__ == '__main__':
 
     ############################
     # conv layers
-    size_list = [(10, 10), (10, 10), (10, 10), (10, 10), (10, 10), (10, 10), (10, 10), (10, 10), (10, 10), (20, 20)]
-    num_list = [1, 6, 6, 6, 6, 6, 6, 6, 6, 1]
+    size_list = [(10, 10), (10, 10), (10, 10), (10, 10), (10, 10), (10, 10), (10, 10), (20, 20)]
+    num_list = [1, 8, 1, 4, 4, 1, 8, 1]
     x_diff_list = [0, layer_width, layer_width, layer_width, layer_width, layer_width, layer_width, layer_width,
                    layer_width, layer_width]
     text_list = ['Inputs'] + ['Feature\nmaps'] * (len(size_list) - 1)
@@ -183,15 +183,15 @@ if __name__ == '__main__':
 
     ############################
     # in between layers
-    start_ratio_list = [[0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5],
+    start_ratio_list = [[0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5],
                         [0.4, 0.5]]
-    end_ratio_list = [[0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5],
+    end_ratio_list = [[0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5], [0.4, 0.5],
                       [0.4, 0.5]]
-    patch_size_list = [(3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3)]
+    patch_size_list = [(3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3)]
     ind_bgn_list = range(len(patch_size_list))
-    text_list = ['Conv', 'Conv', 'Conv', 'Conv', 'Conv', 'Conv', 'Conv', 'Conv', 'Conv']
-    padding = [1, 1, 1, 1, 1, 1, 1, 1, 1]
-    stride = [1, 1, 1, 1, 1, 1, 1, 1, 2]
+    text_list = ['Conv', 'Conv', 'Conv', 'Conv', 'Conv', 'Conv', 'Conv']
+    padding = [1, 1, 1, 1, 1, 1, 1]
+    stride = [1, 1, 1, 1, 1, 1, 2]
     for ind in range(len(patch_size_list)):
         add_mapping(
             patches, colors, start_ratio_list[ind], end_ratio_list[ind],
