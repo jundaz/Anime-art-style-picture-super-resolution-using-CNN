@@ -38,16 +38,28 @@ if __name__ == '__main__':
     image_height = (image.height // args.scale) * args.scale
 
     hr = image.resize((image_width, image_height), resample=pil_image.BICUBIC)
+    hr.crop((760, 160, 1060, 460)). \
+        save(args.image_file.replace('.', '_origin_thumbnail_{}.'.format(args.scale, args.quality)))
     lr = hr.resize((hr.width // args.scale, hr.height // args.scale), resample=pil_image.BICUBIC)
     if args.compress:
         lr = compress_img(lr, args.quality)
-    lr.save(args.image_file.replace('.', '_source_{}.').format(args.quality), format='jpeg', quality=100, subsampling=0)
+    lr.save(args.image_file.replace('.png', '_source_{}.jpg').format(args.quality), format='jpeg', quality=100, subsampling=0)
+    lr.crop((380, 80, 530, 230)).\
+        save(args.image_file.replace('.png', '_source_thumbnail_{}.jpg').format(args.quality), format='jpeg', quality=100, subsampling=0)
+    start = datetime.now()
     bicubic = lr.resize((lr.width * args.scale, lr.height * args.scale), resample=pil_image.BICUBIC)
+    end = datetime.now()
+    time_taken = end - start
+    print('Bicubic_Time: ', time_taken)
     bicubic.save(args.image_file.replace('.', '_bicubic_x{}_{}.'.format(args.scale, args.quality)))
+    bicubic.crop((760, 160, 1060, 460)).\
+        save(args.image_file.replace('.', '_bicubic_x{}_thumbnail_{}.'.format(args.scale, args.quality)))
 
     lr, _ = preprocess(lr, device)
     hr, _ = preprocess(hr, device)
-    _, ycbcr = preprocess(bicubic, device)
+    bicubic, ycbcr = preprocess(bicubic, device)
+    psnr = calc_psnr(hr, bicubic)
+    print('PSNR_bicubic: {:.2f}'.format(psnr))
 
     with torch.no_grad():
         start = datetime.now()
@@ -64,3 +76,5 @@ if __name__ == '__main__':
     output = np.clip(convert_ycbcr_to_rgb(output), 0.0, 255.0).astype(np.uint8)
     output = pil_image.fromarray(output)
     output.save(args.image_file.replace('.', '_ACNet_x{}_{}.'.format(args.scale, args.quality)))
+    output.crop((760, 160, 1060, 460)).\
+        save(args.image_file.replace('.', '_ACNet_x{}_thumbnail_{}.'.format(args.scale, args.quality)))
