@@ -1,4 +1,4 @@
-# Anime art style picture super resolution using convolution neural network with CNN
+# Anime art style picture super resolution using CNN
 Adapted from Framework of FSRCNN By D.Chao et al.\
 required package: \
 pytorch\
